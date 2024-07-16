@@ -1,8 +1,41 @@
 "use client"
 import { Eye } from "@phosphor-icons/react";
 import Image from "next/image";
+import { useState } from "react";
 
 export default function Home() {
+  const [errorMessage, setErrorMessage] = useState("");
+
+  function validateEmail(email){
+    if(!email.includes("@")){
+      return false;
+    }
+
+    if(!email.includes(".com") && !email.includes(".com.br")){
+      return false;
+    }
+
+    if(email.includes("@.")){
+      return false;
+    }
+
+    if(email[0] === "@" || email[0] === "."){
+      return false;
+    }
+
+    return true;
+  }
+
+  function onChangeEmail(event) {
+    const email = event.target.value;
+
+    if(validateEmail(email)){
+      setErrorMessage("");
+    } else {
+      setErrorMessage("*Email inválido, por favor insira um email válido.");
+    }
+  }
+
   return (
     <main className="flex min-h-screen flex-col 
     items-center justify-center p-24 max-h-screen">
@@ -35,7 +68,7 @@ export default function Home() {
               <input className="border-none focus:outline-none bg-opacity-5 bg-black rounded-xl placeholder-gray-400 p-4 flex-1" placeholder="First Name" />
               <input className="border-none focus:outline-none bg-opacity-5 bg-black rounded-xl placeholder-gray-400 p-4 flex-1" placeholder="Second Name" />
             </div>
-            <input className="border-none focus:outline-none bg-opacity-5 bg-black rounded-xl placeholder-gray-400 p-4 min-w-full" placeholder="Email" />
+            <input onBlur={onChangeEmail} className="border-none focus:outline-none bg-opacity-5 bg-black rounded-xl placeholder-gray-400 p-4 min-w-full" placeholder="Email" />
             <div className="h-16 w-full bg-[#f2f2f2] rounded-xl flex items-center px-4 gap-4">
               <Image src="/assets/usaflag.png" alt="arrow" width={35} height={35} />
               <p>+ 1</p>
@@ -52,6 +85,10 @@ export default function Home() {
                 <input className="flex-grow bg-transparent focus:outline-none" placeholder="Confirm Password" />
                 <Eye color="#9da3af" size={32} />
               </div>
+            </div>
+
+            <div className="text-red-600">
+              {errorMessage}
             </div>
 
             <div className="flex items-start px-4">
