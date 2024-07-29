@@ -1,4 +1,6 @@
 "use client"
+import { maskPhoneNumber } from "@/utils/masks";
+import { validateEmail, validatePhoneNumber } from "@/utils/validations";
 import { Eye } from "@phosphor-icons/react";
 import Image from "next/image";
 import { useState } from "react";
@@ -6,27 +8,7 @@ import { useState } from "react";
 export default function Home() {
   const [errorMessage, setErrorMessage] = useState("");
 
-  function validateEmail(email){
-    if(!email.includes("@")){
-      return false;
-    }
-
-    if(!email.includes(".com") && !email.includes(".com.br")){
-      return false;
-    }
-
-    if(email.includes("@.")){
-      return false;
-    }
-
-    if(email[0] === "@" || email[0] === "."){
-      return false;
-    }
-
-    return true;
-  }
-
-  function onChangeEmail(event) {
+  function onBlurEmail(event) {
     const email = event.target.value;
 
     if(validateEmail(email)){
@@ -35,6 +17,19 @@ export default function Home() {
       setErrorMessage("*Email inválido, por favor insira um email válido.");
     }
   }
+
+  function onBlurPhoneNumber(event) {
+    const phoneNumber = event.target.value;
+
+    if(validatePhoneNumber(phoneNumber)){
+      event.target.value = maskPhoneNumber(phoneNumber)
+
+      setErrorMessage("");
+    } else {
+      setErrorMessage("*Número de telefone inválido, por favor insira um número de telefone válido.");
+    }
+  }
+
 
   return (
     <main className="flex min-h-screen flex-col 
@@ -68,12 +63,12 @@ export default function Home() {
               <input className="border-none focus:outline-none bg-opacity-5 bg-black rounded-xl placeholder-gray-400 p-4 flex-1" placeholder="First Name" />
               <input className="border-none focus:outline-none bg-opacity-5 bg-black rounded-xl placeholder-gray-400 p-4 flex-1" placeholder="Second Name" />
             </div>
-            <input onBlur={onChangeEmail} className="border-none focus:outline-none bg-opacity-5 bg-black rounded-xl placeholder-gray-400 p-4 min-w-full" placeholder="Email" />
+            <input onBlur={onBlurEmail} className="border-none focus:outline-none bg-opacity-5 bg-black rounded-xl placeholder-gray-400 p-4 min-w-full" placeholder="Email" />
             <div className="h-16 w-full bg-[#f2f2f2] rounded-xl flex items-center px-4 gap-4">
               <Image src="/assets/usaflag.png" alt="arrow" width={35} height={35} />
               <p>+ 1</p>
               <div className="w-[1px] h-[80%] bg-gray-400 rounded" />
-              <input className="flex-grow bg-transparent focus:outline-none" placeholder="Number" />
+              <input onBlur={onBlurPhoneNumber} className="flex-grow bg-transparent focus:outline-none" placeholder="Number" />
             </div>
 
             <div className="flex gap-5 max-w-full">
