@@ -27,7 +27,6 @@ export function validatePhoneNumber(phoneNumber) {
 
   const validDDD = EXISTING_DDDs_BR.includes(twoFirstDigits);
 
-
   if (phoneNumber.length !== 11) {
     return false;
   }
